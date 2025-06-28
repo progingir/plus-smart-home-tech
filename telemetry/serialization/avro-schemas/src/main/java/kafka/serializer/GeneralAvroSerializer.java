@@ -32,5 +32,4 @@ public class GeneralAvroSerializer implements Serializer<SpecificRecordBase> {
             throw new SerializationException("Serialization error", e);
         }
     }
-
 }
