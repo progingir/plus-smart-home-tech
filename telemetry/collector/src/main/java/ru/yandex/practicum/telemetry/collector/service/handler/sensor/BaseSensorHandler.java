@@ -6,17 +6,14 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
 
-import java.time.Instant;
-
-
 public abstract class BaseSensorHandler implements SensorEventHandler {
 
-    KafkaEventProducer producer;
-    String topic;
+    protected final KafkaEventProducer producer;
+    protected final String topic;
 
     public BaseSensorHandler(KafkaEventProducer kafkaProducer) {
         this.producer = kafkaProducer;
-        topic = kafkaProducer.getConfig().getTopics().get("sensors-events");
+        this.topic = kafkaProducer.getConfig().getTopics().get("sensors-events");
     }
 
     @Override
@@ -27,7 +24,7 @@ public abstract class BaseSensorHandler implements SensorEventHandler {
                         null,
                         System.currentTimeMillis(),
                         sensorEvent.getHubId(),
-                        toSensorEventAvro(sensorEvent)); // Изменено на toSensorEventAvro
+                        toSensorEventAvro(sensorEvent));
         producer.sendRecord(record);
     }
 
@@ -35,12 +32,10 @@ public abstract class BaseSensorHandler implements SensorEventHandler {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(sensorEvent.getTimestamp().toEpochMilli()))
-                .setPayload(toAvro(sensorEvent)) // toAvro возвращает специфичный Avro-объект
+                .setTimestamp(System.currentTimeMillis()) // Используем long для timestamp
+                .setPayload(toAvro(sensorEvent))
                 .build();
     }
 
     abstract SpecificRecordBase toAvro(SensorEvent sensorEvent);
-
 }
-

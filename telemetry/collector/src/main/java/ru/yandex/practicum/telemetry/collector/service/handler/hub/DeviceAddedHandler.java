@@ -1,7 +1,9 @@
 package ru.yandex.practicum.telemetry.collector.service.handler.hub;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.*;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.telemetry.collector.model.hub.DeviceAddedEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
@@ -21,7 +23,7 @@ public class DeviceAddedHandler extends BaseHubHandler {
     }
 
     @Override
-    DeviceAddedEventAvro toAvro(HubEvent hubEvent) {
+    SpecificRecordBase toAvro(HubEvent hubEvent) {
         DeviceAddedEvent addedDeviceEvent = (DeviceAddedEvent) hubEvent;
         return DeviceAddedEventAvro.newBuilder()
                 .setId(addedDeviceEvent.getId())
@@ -31,12 +33,11 @@ public class DeviceAddedHandler extends BaseHubHandler {
 
     private DeviceTypeAvro toDeviceTypeAvro(DeviceType deviceType) {
         return switch (deviceType) {
-            case DeviceType.MOTION_SENSOR -> DeviceTypeAvro.MOTION_SENSOR;
-            case DeviceType.CLIMATE_SENSOR -> DeviceTypeAvro.CLIMATE_SENSOR;
-            case DeviceType.LIGHT_SENSOR -> DeviceTypeAvro.LIGHT_SENSOR;
-            case DeviceType.SWITCH_SENSOR -> DeviceTypeAvro.SWITCH_SENSOR;
-            case DeviceType.TEMPERATURE_SENSOR -> DeviceTypeAvro.TEMPERATURE_SENSOR;
+            case MOTION_SENSOR -> DeviceTypeAvro.MOTION_SENSOR;
+            case CLIMATE_SENSOR -> DeviceTypeAvro.CLIMATE_SENSOR;
+            case LIGHT_SENSOR -> DeviceTypeAvro.LIGHT_SENSOR;
+            case SWITCH_SENSOR -> DeviceTypeAvro.SWITCH_SENSOR;
+            case TEMPERATURE_SENSOR -> DeviceTypeAvro.TEMPERATURE_SENSOR;
         };
     }
-
 }
