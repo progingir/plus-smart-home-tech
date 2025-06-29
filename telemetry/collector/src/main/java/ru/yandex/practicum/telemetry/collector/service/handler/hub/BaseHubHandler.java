@@ -22,7 +22,7 @@ public abstract class BaseHubHandler implements HubEventHandler {
                 new ProducerRecord<>(
                         topic,
                         null,
-                        System.currentTimeMillis(),
+                        hubEvent.getTimestamp().toEpochMilli(), // Используем timestamp из HubEvent
                         hubEvent.getHubId(),
                         toHubEventAvro(hubEvent));
         producer.sendRecord(record);
@@ -31,7 +31,7 @@ public abstract class BaseHubHandler implements HubEventHandler {
     private HubEventAvro toHubEventAvro(HubEvent hubEvent) {
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(System.currentTimeMillis()) // Используем long для timestamp
+                .setTimestamp(hubEvent.getTimestamp().toEpochMilli()) // Используем timestamp из HubEvent
                 .setPayload(toAvro(hubEvent))
                 .build();
     }

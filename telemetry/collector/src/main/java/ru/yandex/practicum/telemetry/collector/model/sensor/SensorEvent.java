@@ -21,19 +21,28 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = ClimateSensorEvent.class, name = "CLIMATE_SENSOR_EVENT"),
         @JsonSubTypes.Type(value = MotionSensorEvent.class, name = "MOTION_SENSOR_EVENT"),
         @JsonSubTypes.Type(value = SwitchSensorEvent.class, name = "SWITCH_SENSOR_EVENT"),
-        @JsonSubTypes.Type(value = TemperatureSensorEvent.class, name = "TEMPERATURE_SENSOR_EVENT"),
-
+        @JsonSubTypes.Type(value = TemperatureSensorEvent.class, name = "TEMPERATURE_SENSOR_EVENT")
 })
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public abstract class SensorEvent {
 
     @NotBlank
     private String id;
     @NotBlank
     private String hubId;
-    private final Instant timestamp = Instant.now();
+    private Instant timestamp; // Убрали инициализацию Instant.now()
+
+    public SensorEvent() {
+    }
+
+    public SensorEvent(String id, String hubId, Instant timestamp) {
+        this.id = id;
+        this.hubId = hubId;
+        this.timestamp = timestamp;
+    }
 
     @NotNull
     public abstract SensorEventType getType();
-
 }

@@ -10,6 +10,7 @@ import lombok.ToString;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
 
 import java.time.Instant;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -22,14 +23,23 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = ScenarioAddedEvent.class, name = "SCENARIO_ADDED"),
         @JsonSubTypes.Type(value = ScenarioRemovedEvent.class, name = "SCENARIO_REMOVED")
 })
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public abstract class HubEvent {
 
     @NotBlank
     private String hubId;
-    private final Instant timestamp = Instant.now();
+    private Instant timestamp; // Убрали инициализацию Instant.now()
+
+    public HubEvent() {
+    }
+
+    public HubEvent(String hubId, Instant timestamp) {
+        this.hubId = hubId;
+        this.timestamp = timestamp;
+    }
 
     @NotNull
     public abstract HubEventType getType();
-
 }
