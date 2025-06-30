@@ -7,7 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ActionType;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class DeviceAction {
 
     @NotBlank
@@ -17,5 +19,4 @@ public class DeviceAction {
     private ActionType type;
 
     private Integer value;
-
 }

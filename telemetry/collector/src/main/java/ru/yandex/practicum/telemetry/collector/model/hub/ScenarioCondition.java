@@ -8,7 +8,9 @@ import lombok.ToString;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionOperation;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionType;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class ScenarioCondition {
 
     @NotBlank
@@ -21,5 +23,4 @@ public class ScenarioCondition {
     ConditionOperation operation;
 
     int value;
-
 }

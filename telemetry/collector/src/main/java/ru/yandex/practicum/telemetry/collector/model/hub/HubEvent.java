@@ -30,7 +30,7 @@ public abstract class HubEvent {
 
     @NotBlank
     private String hubId;
-    private Instant timestamp; // Убрали инициализацию Instant.now()
+    private Instant timestamp;
 
     public HubEvent() {
     }

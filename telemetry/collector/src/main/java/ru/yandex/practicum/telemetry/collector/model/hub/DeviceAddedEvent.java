@@ -6,7 +6,9 @@ import lombok.ToString;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.DeviceType;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
 
-@Getter @Setter @ToString(callSuper = true)
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class DeviceAddedEvent extends HubEvent {
     private String id;
     private DeviceType deviceType;

@@ -8,7 +8,9 @@ import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
 
 import java.util.List;
 
-@Getter @Setter @ToString(callSuper=true)
+@Getter
+@Setter
+@ToString(callSuper=true)
 public class ScenarioAddedEvent extends HubEvent {
 
     @NotBlank
