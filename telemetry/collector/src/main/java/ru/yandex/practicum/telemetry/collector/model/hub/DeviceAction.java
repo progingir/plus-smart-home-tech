@@ -2,14 +2,10 @@ package ru.yandex.practicum.telemetry.collector.model.hub;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ActionType;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class DeviceAction {
 
     @NotBlank

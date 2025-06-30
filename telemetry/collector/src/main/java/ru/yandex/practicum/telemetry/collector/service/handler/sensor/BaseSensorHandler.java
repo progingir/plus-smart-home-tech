@@ -22,7 +22,7 @@ public abstract class BaseSensorHandler implements SensorEventHandler {
                 new ProducerRecord<>(
                         topic,
                         null,
-                        sensorEvent.getTimestamp().toEpochMilli(), // Используем timestamp из SensorEvent
+                        sensorEvent.getTimestamp().toEpochMilli(),
                         sensorEvent.getHubId(),
                         toSensorEventAvro(sensorEvent));
         producer.sendRecord(record);
@@ -32,7 +32,7 @@ public abstract class BaseSensorHandler implements SensorEventHandler {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(sensorEvent.getTimestamp().toEpochMilli()) // Используем timestamp из SensorEvent
+                .setTimestamp(sensorEvent.getTimestamp().toEpochMilli())
                 .setPayload(toAvro(sensorEvent))
                 .build();
     }

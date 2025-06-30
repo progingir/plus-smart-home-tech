@@ -20,12 +20,12 @@ public class TemperatureEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    TemperatureSensorAvro toAvro(SensorEvent sensorEvent) { // Исправлено
+    TemperatureSensorAvro toAvro(SensorEvent sensorEvent) {
         TemperatureSensorEvent temperatureEvent = (TemperatureSensorEvent) sensorEvent;
 
         return TemperatureSensorAvro.newBuilder()
                 .setTemperatureF(temperatureEvent.getTemperatureF())
-                .setTemperatureC(temperatureEvent.getTemperatureC()) // Исправлено
+                .setTemperatureC(temperatureEvent.getTemperatureC())
                 .build();
     }
 }

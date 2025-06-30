@@ -20,7 +20,7 @@ public class LightEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    LightSensorAvro toAvro(SensorEvent sensorEvent) { // Исправлено
+    LightSensorAvro toAvro(SensorEvent sensorEvent) {
         LightSensorEvent lightEvent = (LightSensorEvent) sensorEvent;
 
         return LightSensorAvro.newBuilder()

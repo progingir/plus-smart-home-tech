@@ -1,18 +1,19 @@
 package ru.yandex.practicum.telemetry.collector.model.sensor;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Getter
-@Setter
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MotionSensorEvent extends SensorEvent {
 
-    int linkQuality;
-    boolean motion;
-    int voltage;
-
+    private int linkQuality;
+    private boolean motion;
+    private int voltage;
 
     @Override
     public SensorEventType getType() {

@@ -1,12 +1,14 @@
 package ru.yandex.practicum.telemetry.collector.model.sensor;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Getter
-@Setter
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LightSensorEvent extends SensorEvent {
 
     private int linkQuality;
@@ -16,5 +18,4 @@ public class LightSensorEvent extends SensorEvent {
     public SensorEventType getType() {
         return SensorEventType.LIGHT_SENSOR_EVENT;
     }
-
 }

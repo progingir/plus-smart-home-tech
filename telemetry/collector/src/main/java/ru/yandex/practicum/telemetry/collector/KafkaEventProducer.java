@@ -28,11 +28,6 @@ public class KafkaEventProducer {
                 throw new RuntimeException("Failed to send record to Kafka", exception);
             }
         });
-        producer.flush(); // Вызываем flush только при необходимости
-    }
-
-    // Закрытие продюсера при завершении приложения
-    public void close() {
-        producer.close();
+        producer.flush();
     }
 }

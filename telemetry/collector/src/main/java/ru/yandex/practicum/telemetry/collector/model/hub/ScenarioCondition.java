@@ -2,25 +2,25 @@ package ru.yandex.practicum.telemetry.collector.model.hub;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionOperation;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionType;
 
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ScenarioCondition {
 
     @NotBlank
-    String sensorId;
+    private String sensorId;
 
     @NotNull
-    ConditionType type;
+    private ConditionType type;
 
     @NotNull
-    ConditionOperation operation;
+    private ConditionOperation operation;
 
-    int value;
+    private int value;
 }

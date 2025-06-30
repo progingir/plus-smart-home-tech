@@ -1,15 +1,18 @@
 package ru.yandex.practicum.telemetry.collector.model.hub;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.DeviceType;
 import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
 
-@Getter
-@Setter
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeviceAddedEvent extends HubEvent {
+
     private String id;
     private DeviceType deviceType;
 
