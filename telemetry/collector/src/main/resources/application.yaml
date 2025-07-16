@@ -11,7 +11,7 @@ collector:
       bootstrap.servers: localhost:9092
       client.id: telemetry.collector
       key.serializer: org.apache.kafka.common.serialization.StringSerializer
-      value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value.serializer: kafka.serializer.GeneralAvroSerializer
       schema.registry.url: http://localhost:8081
       acks: all
       retries: 3
