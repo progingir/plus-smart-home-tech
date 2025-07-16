@@ -22,4 +22,4 @@ grpc:
       keep-alive-without-calls: true
       negotiation-type: plaintext
   server:
-    port: 9090
+    port: 59092
