@@ -11,8 +11,6 @@ collector:
       "client.id": telemetry.collector
       "key.serializer": org.apache.kafka.common.serialization.StringSerializer
       "value.serializer": kafka.serializer.GeneralAvroSerializer
-      "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
-      "value.deserializer": kafka.serializer.GeneralAvroDeserializer
     topics:
       sensors-events: telemetry.sensors.v1
       hubs-events: telemetry.hubs.v1
