@@ -1,6 +1,6 @@
 services:
   kafka:
-    image: confluentinc/confluent-local:7.4.3
+    image: confluence/confluent-local:7.4.3
     hostname: kafka
     container_name: kafka
     ports:
@@ -19,7 +19,7 @@ services:
       CLUSTER_ID: 'K0EA9p0yEe6MkAAAAkKsEg'
 
   kafka-init-topics:
-    image: confluentinc/confluent-local:7.4.3
+    image: confluence/confluent-local:7.4.3
     container_name: kafka-init-topics
     depends_on:
       - kafka
