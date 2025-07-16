@@ -17,9 +17,9 @@ collector:
 grpc:
   client:
     collector:
-      address: 'static://127.0.0.1:9090'
+      address: 'static://127.0.0.1:59091'
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
   server:
-    port: 59092
+    port: 59091
