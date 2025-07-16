@@ -103,6 +103,24 @@
                     <groupId>io.github.ascopes</groupId>
                     <artifactId>protobuf-maven-plugin</artifactId>
                     <version>${protobuf-plugin.version}</version>
+                    <!-- <configuration>
+                        <protocVersion>${protobuf.version}</protocVersion>
+                        <binaryMavenPlugins>
+                            <binaryMavenPlugin>
+                                <groupId>io.grpc</groupId>
+                                <artifactId>protoc-gen-grpc-java</artifactId>
+                                <version>${grpc.version}</version>
+                            </binaryMavenPlugin>
+                        </binaryMavenPlugins>
+                    </configuration>
+
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>-->
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: analyzer
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:9432/sht-db
+    username: main
+    password: main
+
+analyzer:
+  kafka:
+    hub-consumer-properties:
+      "bootstrap.servers": localhost:9092
+      "group.id": analyzer-hub-group
+      "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
+      "value.deserializer": kafka.serializer.HubEventDeserializer
+    snapshot-consumer-properties:
+      "bootstrap.servers": localhost:9092
+      "group.id": analyzer-snapshot-group
+      "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
+      "value.deserializer": kafka.serializer.SensorSnapshotDeserializer
+    topics:
+      hubs-events: telemetry.hubs.v1
+      sensors-snapshot: telemetry.snapshots.v1
+grpc:
+  client:
+     hub-router:
+       address: 'static://localhost:59090'
+       enableKeepAlive: true
+       keepAliveWithoutCalls: true
+       negotiationType: plaintext

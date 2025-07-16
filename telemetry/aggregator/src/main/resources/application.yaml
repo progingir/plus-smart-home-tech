@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: aggregator
+
+
+aggregator:
+  kafka:
+    producer-properties:
+      "bootstrap.servers": localhost:9092
+      "key.serializer": org.apache.kafka.common.serialization.StringSerializer
+      "value.serializer": kafka.serializer.GeneralAvroSerializer
+    consumer-properties:
+      "bootstrap.servers": localhost:9092
+      "group.id": aggregator-group
+      "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
+      "value.deserializer": kafka.serializer.SensorEventDeserializer
+
+    topics:
+      sensors-events: telemetry.sensors.v1
+      hubs-events: telemetry.hubs.v1
+      sensors-snapshot: telemetry.snapshots.v1

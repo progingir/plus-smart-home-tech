@@ -33,3 +33,13 @@ services:
                              --partitions 1 --replication-factor 1 --if-not-exists \
                              --bootstrap-server kafka:29092'"
     init: true
+
+  sht-db:
+    image: postgres:16.1
+    container_name: sht-db
+    ports:
+      - "9432:5432"
+    environment:
+      - POSTGRES_DB=sht-db
+      - POSTGRES_USER=main
+      - POSTGRES_PASSWORD=main

@@ -15,6 +15,16 @@
     <modules>
         <module>serialization</module>
         <module>collector</module>
+        <module>aggregator</module>
+        <module>analyzer</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
 </project>
