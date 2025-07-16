@@ -2,24 +2,13 @@ spring:
   application:
     name: collector
 
-
-
 collector:
   kafka:
     producer-properties:
-      "bootstrap.servers": localhost:9092
+      "bootstrap.servers": ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
       "client.id": telemetry.collector
       "key.serializer": org.apache.kafka.common.serialization.StringSerializer
       "value.serializer": kafka.serializer.GeneralAvroSerializer
     topics:
       sensors-events: telemetry.sensors.v1
       hubs-events: telemetry.hubs.v1
-grpc:
-  client:
-    collector:
-      address: 'static://127.0.0.1:9090'
-      enable-keep-alive: true
-      keep-alive-without-calls: true
-      negotiation-type: plaintext
-  server:
-    port: 9090
