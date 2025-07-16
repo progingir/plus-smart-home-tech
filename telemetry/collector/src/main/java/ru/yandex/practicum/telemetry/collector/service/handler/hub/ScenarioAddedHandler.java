@@ -36,7 +36,7 @@ public class ScenarioAddedHandler extends BaseHubHandler {
         List<ScenarioConditionAvro> scenarioConditionAvroList = addedScenarioEvent.getConditions().stream()
                 .map(this::toScenarioConditionAvro)
                 .toList();
-
+//проба
         return ScenarioAddedEventAvro.newBuilder()
                 .setName(addedScenarioEvent.getName())
                 .setAction(actionAvroList)
