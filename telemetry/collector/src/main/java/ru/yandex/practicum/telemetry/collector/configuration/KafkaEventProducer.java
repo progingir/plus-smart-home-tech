@@ -1,19 +1,24 @@
 package ru.yandex.practicum.telemetry.collector.configuration;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 @Component
-@Getter @Setter @ToString
-public class KafkaEventProducer {
+@Getter
+@Setter
+@ToString
+public class KafkaEventProducer implements AutoCloseable, DisposableBean, ApplicationContextAware {
     private final KafkaProducer<String, SpecificRecordBase> producer;
     private final KafkaConfig config;
+    private static ApplicationContext context;
 
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
         this.config = kafkaConfig;
@@ -21,13 +26,28 @@ public class KafkaEventProducer {
     }
 
     public void sendRecord(ProducerRecord<String, SpecificRecordBase> record) {
-        try(producer) {
+        try {
             producer.send(record);
             producer.flush();
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при отправке записи в Kafka: " + e.getMessage(), e);
         }
     }
 
+    @Override
+    public void close() {
+        if (producer != null) {
+            producer.close();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        close();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        context = applicationContext;
+    }
 }
