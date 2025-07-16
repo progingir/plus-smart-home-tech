@@ -4,16 +4,22 @@ spring:
 
 collector:
   kafka:
+    topics:
+      sensors-events: telemetry.sensors.v1
+      hubs-events: telemetry.hubs.v1
     producer-properties:
       bootstrap.servers: localhost:9092
       client.id: telemetry.collector
       key.serializer: org.apache.kafka.common.serialization.StringSerializer
       value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       schema.registry.url: http://localhost:8081
-    topics:
-      sensors-events: telemetry.sensors.v1
-      hubs-events: telemetry.hubs.v1
+      acks: all
+      retries: 3
+      max.in.flight.requests.per.connection: 1
+      enable.idempotence: true
+      request.timeout.ms: 5000
+      delivery.timeout.ms: 10000
 
 grpc:
   server:
-    port: 9091
+    port: 59091
