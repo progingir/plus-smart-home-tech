@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.Properties;
+
 @Component
 @Getter
 @Setter
@@ -22,12 +24,18 @@ public class KafkaEventProducer implements AutoCloseable, DisposableBean, Applic
 
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
         this.config = kafkaConfig;
-        this.producer = new KafkaProducer<>(kafkaConfig.getProducerProperties());
+        // Убедимся, что свойства инициализированы правильно
+        Properties props = kafkaConfig.getProducerProperties();
+        this.producer = new KafkaProducer<>(props);
     }
 
     public void sendRecord(ProducerRecord<String, SpecificRecordBase> record) {
         try {
-            producer.send(record);
+            producer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    throw new RuntimeException("Ошибка при отправке записи в Kafka: " + exception.getMessage(), exception);
+                }
+            });
             producer.flush();
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при отправке записи в Kafka: " + e.getMessage(), e);
