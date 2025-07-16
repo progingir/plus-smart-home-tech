@@ -5,7 +5,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
-import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
+import ru.yandex.practicum.telemetry.collector.configuration.KafkaEventProducer;
 
 public abstract class BaseSensorHandler implements SensorEventHandler {
 

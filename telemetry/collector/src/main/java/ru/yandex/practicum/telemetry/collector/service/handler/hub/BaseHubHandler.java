@@ -5,7 +5,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
-import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
+import ru.yandex.practicum.telemetry.collector.configuration.KafkaEventProducer;
 
 
 public abstract class BaseHubHandler implements HubEventHandler {
