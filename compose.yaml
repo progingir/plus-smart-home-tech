@@ -23,15 +23,15 @@ services:
     depends_on:
       - kafka
     command: "bash -c \
-                'kafka-topics --create --topic telemetry.sensors.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092 && \
-                kafka-topics --create --topic telemetry.snapshots.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092 && \
-                kafka-topics --create --topic telemetry.hubs.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092'"
+               'kafka-topics --create --topic telemetry.sensors.v1 \
+                            --partitions 1 --replication-factor 1 --if-not-exists \
+                            --bootstrap-server kafka:29092 && \
+               kafka-topics --create --topic telemetry.snapshots.v1 \
+                            --partitions 1 --replication-factor 1 --if-not-exists \
+                            --bootstrap-server kafka:29092 && \
+               kafka-topics --create --topic telemetry.hubs.v1 \
+                            --partitions 1 --replication-factor 1 --if-not-exists \
+                            --bootstrap-server kafka:29092'"
     init: true
 
   schema-registry:
@@ -45,6 +45,29 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+  schema-registry-init:
+    image: curlimages/curl:8.2.1
+    container_name: schema-registry-init
+    depends_on:
+      - schema-registry
+    volumes:
+      - ./schemas:/schemas
+    command: >
+      sh -c "
+        until curl -s http://schema-registry:8081; do
+          echo 'Waiting for Schema Registry...';
+          sleep 2;
+        done;
+        curl -X POST -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
+          --data @/schemas/HubEventAvro.avsc \
+          http://schema-registry:8081/subjects/telemetry.hubs.v1-value/versions;
+        curl -X POST -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
+          --data @/schemas/SensorEventAvro.avsc \
+          http://schema-registry:8081/subjects/telemetry.sensors.v1-value/versions;
+        echo 'Schemas registered';
+      "
+    init: true
 
   sht-db:
     image: postgres:16.1
