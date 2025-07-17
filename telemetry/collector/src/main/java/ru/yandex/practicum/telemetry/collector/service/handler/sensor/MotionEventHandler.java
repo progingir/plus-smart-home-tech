@@ -23,15 +23,13 @@ public class MotionEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    MotionSensorAvro toAvro(SensorEventProto sensorEvent) {
+    MotionSensorAvro getPayload(SensorEventProto sensorEvent) {
         log.info("Converting to Avro Motion sensor event: {}", sensorEvent);
         MotionSensorEvent motionEvent = sensorEvent.getMotionSensorEvent();
-
         return MotionSensorAvro.newBuilder()
                 .setMotion(motionEvent.getMotion())
                 .setLinkQuality(motionEvent.getLinkQuality())
                 .setVoltage(motionEvent.getVoltage())
                 .build();
     }
-
 }

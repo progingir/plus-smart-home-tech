@@ -23,7 +23,7 @@ public class TemperatureEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    TemperatureSensorAvro toAvro(SensorEventProto sensorEvent) {
+    public TemperatureSensorAvro getPayload(SensorEventProto sensorEvent) {
         log.info("Converting to Avro Temperature sensor event: {}", sensorEvent);
         TemperatureSensorEvent temperatureEvent = sensorEvent.getTemperatureSensorEvent();
 
@@ -32,5 +32,4 @@ public class TemperatureEventHandler extends BaseSensorHandler {
                 .setTemperatureC(temperatureEvent.getTemperatureC())
                 .build();
     }
-
 }

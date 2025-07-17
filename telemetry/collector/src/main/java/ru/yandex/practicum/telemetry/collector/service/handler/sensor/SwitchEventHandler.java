@@ -23,7 +23,7 @@ public class SwitchEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    SwitchSensorAvro toAvro(SensorEventProto sensorEvent) {
+    public SwitchSensorAvro getPayload(SensorEventProto sensorEvent) {
         log.info("Converting to Avro Switch sensor event: {}", sensorEvent);
         SwitchSensorEvent switchEvent = sensorEvent.getSwitchSensorEvent();
 

@@ -24,7 +24,6 @@ public class KafkaEventProducer implements AutoCloseable, DisposableBean, Applic
 
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
         this.config = kafkaConfig;
-        // Убедимся, что свойства инициализированы правильно
         Properties props = kafkaConfig.getProducerProperties();
         this.producer = new KafkaProducer<>(props);
     }

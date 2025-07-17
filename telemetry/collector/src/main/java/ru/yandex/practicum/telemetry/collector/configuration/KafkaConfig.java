@@ -21,10 +21,9 @@ public class KafkaConfig {
         if (producerProperties == null) {
             producerProperties = new Properties();
         }
-        // Убедимся, что есть настройки сериализации Avro
+        // Устанавливаем только необходимые свойства, без Schema Registry
         producerProperties.putIfAbsent("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        producerProperties.putIfAbsent("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
-        producerProperties.putIfAbsent("schema.registry.url", "http://localhost:8081");
+        producerProperties.putIfAbsent("value.serializer", "kafka.serializer.GeneralAvroSerializer");
         return producerProperties;
     }
 }

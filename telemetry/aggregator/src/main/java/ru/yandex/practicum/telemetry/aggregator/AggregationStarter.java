@@ -1,6 +1,5 @@
 package ru.yandex.practicum.telemetry.aggregator;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -43,7 +42,6 @@ public class AggregationStarter {
             Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
             consumer.subscribe(List.of(kafkaConfig.getTopics().get("sensors-events")));
 
-            //poll loop - цикл опроса
             while (true) {
                 ConsumerRecords<String, SensorEventAvro> records =
                         consumer.poll(Duration.ofSeconds(5));
@@ -58,11 +56,8 @@ public class AggregationStarter {
                         log.warn("Commit processing error. Offsets: {}", offsets, exception);
                     }
                 });
-
             }
-
         } catch (WakeupException ignored) {
-
         } catch (Exception e) {
             log.error("Aggregator. Error by handling events from sensors", e);
         } finally {
@@ -71,7 +66,6 @@ public class AggregationStarter {
             log.info("Aggregator. Closing producer.");
             producer.close();
         }
-
     }
 
     private Optional<SensorsSnapshotAvro> updateState(SensorEventAvro event) {
@@ -83,7 +77,10 @@ public class AggregationStarter {
             if (oldEvent.isPresent() && oldEvent.get().getTimestamp().isBefore(Instant.ofEpochMilli(event.getTimestamp()))) {
                 SensorsSnapshotAvro newSnapshot = oldSnapshot.get();
                 newSnapshot.setTimestamp(Instant.ofEpochMilli(event.getTimestamp()));
-                newSnapshot.getSensorsState().put(event.getId(), newSnapshot.getSensorsState().get(event.getId()));
+                SensorStateAvro newSensorState = new SensorStateAvro();
+                newSensorState.setTimestamp(Instant.ofEpochMilli(event.getTimestamp()));
+                newSensorState.setData(event.getPayload()); // Используем payload
+                newSnapshot.getSensorsState().put(event.getId(), newSensorState);
                 return Optional.of(newSnapshot);
             } else {
                 return Optional.empty();
@@ -92,7 +89,7 @@ public class AggregationStarter {
             Map<String, SensorStateAvro> state = new HashMap<>();
             SensorStateAvro sensorStateAvro = new SensorStateAvro();
             sensorStateAvro.setTimestamp(Instant.ofEpochMilli(event.getTimestamp()));
-            sensorStateAvro.setData(event);
+            sensorStateAvro.setData(event.getPayload()); // Используем payload
             state.put(event.getId(), sensorStateAvro);
             return Optional.of(snapshotsRepository.update(event.getHubId(),
                     SensorsSnapshotAvro.newBuilder()
@@ -107,16 +104,14 @@ public class AggregationStarter {
         log.info("Sending snapshot for {}. SnapShot: {}", snapshot.getHubId(), snapshot);
         ProducerRecord<String, SensorsSnapshotAvro> snapshotRecord =
                 new ProducerRecord<>(
-                        kafkaConfig.getTopics().get("sensors-snapshots"), null, snapshot.getHubId(),snapshot);
+                        kafkaConfig.getTopics().get("sensors-snapshots"), null, snapshot.getHubId(), snapshot);
         log.info("Sending snapshot {}", snapshotRecord);
-        try(producer) {
+        try {
             producer.send(snapshotRecord);
             producer.flush();
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

@@ -23,7 +23,7 @@ public class ClimateEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    ClimateSensorAvro toAvro(SensorEventProto sensorEvent) {
+    public ClimateSensorAvro getPayload(SensorEventProto sensorEvent) {
         log.info("Converting to Avro Climate sensor event: {}", sensorEvent);
         ClimateSensorEvent climateEvent = sensorEvent.getClimateSensorEvent();
 
@@ -33,5 +33,4 @@ public class ClimateEventHandler extends BaseSensorHandler {
                 .setHumidity(climateEvent.getHumidity())
                 .build();
     }
-
 }

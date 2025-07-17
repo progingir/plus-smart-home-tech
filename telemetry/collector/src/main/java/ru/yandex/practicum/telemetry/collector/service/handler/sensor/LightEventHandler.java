@@ -23,7 +23,7 @@ public class LightEventHandler extends BaseSensorHandler {
     }
 
     @Override
-    LightSensorAvro toAvro(SensorEventProto sensorEvent) {
+    public LightSensorAvro getPayload(SensorEventProto sensorEvent) {
         log.info("Converting to Avro LightSensorEvent: {}", sensorEvent);
         LightSensorEvent lightEvent = sensorEvent.getLightSensorEvent();
 
