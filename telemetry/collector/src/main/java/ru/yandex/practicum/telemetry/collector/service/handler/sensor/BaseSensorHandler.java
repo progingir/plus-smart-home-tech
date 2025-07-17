@@ -31,13 +31,19 @@ public abstract class BaseSensorHandler implements SensorEventHandler {
         SensorEventAvro eventAvro = SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(sensorEvent.getTimestamp())
+                .setTimestamp(timestampToLong(sensorEvent.getTimestamp())) // Преобразуем Timestamp в long
                 .setPayload(payload)
                 .build();
-        ProducerRecord<String, SensorEventAvro> record =
+        // Приводим тип к SpecificRecordBase для совместимости с KafkaEventProducer
+        ProducerRecord<String, SpecificRecordBase> record =
                 new ProducerRecord<>(
                         topic, null, System.currentTimeMillis(), sensorEvent.getHubId(), eventAvro);
         log.info("Sending sensor event {}", record);
         producer.sendRecord(record);
+    }
+
+    // Метод для преобразования com.google.protobuf.Timestamp в long
+    private long timestampToLong(com.google.protobuf.Timestamp timestamp) {
+        return timestamp.getSeconds() * 1000 + timestamp.getNanos() / 1_000_000;
     }
 }
