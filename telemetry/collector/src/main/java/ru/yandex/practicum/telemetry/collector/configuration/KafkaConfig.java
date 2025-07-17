@@ -13,4 +13,4 @@ import java.util.Properties;
 public class KafkaConfig {
     private Map<String, String> topics;
     private Properties producerProperties;
-}
+}//проба
