@@ -46,29 +46,6 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
-  schema-registry-init:
-    image: curlimages/curl:8.2.1
-    container_name: schema-registry-init
-    depends_on:
-      - schema-registry
-    volumes:
-      - ./schemas:/schemas
-    command: >
-      sh -c "
-        until curl -s http://schema-registry:8081; do
-          echo 'Waiting for Schema Registry...';
-          sleep 2;
-        done;
-        curl -X POST -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
-          --data @/schemas/HubEventAvro.avsc \
-          http://schema-registry:8081/subjects/telemetry.hubs.v1-value/versions;
-        curl -X POST -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
-          --data @/schemas/SensorEventAvro.avsc \
-          http://schema-registry:8081/subjects/telemetry.sensors.v1-value/versions;
-        echo 'Schemas registered';
-      "
-    init: true
-
   sht-db:
     image: postgres:16.1
     container_name: sht-db

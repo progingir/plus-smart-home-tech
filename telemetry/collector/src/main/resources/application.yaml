@@ -13,6 +13,7 @@ collector:
       key.serializer: org.apache.kafka.common.serialization.StringSerializer
       value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       schema.registry.url: http://localhost:8081
+      auto.register.schemas: true
       acks: all
       retries: 3
       max.in.flight.requests.per.connection: 1
