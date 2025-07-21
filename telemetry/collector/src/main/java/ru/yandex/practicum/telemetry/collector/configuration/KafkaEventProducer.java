@@ -1,4 +1,4 @@
-package ru.yandex.practicum.telemetry.collector;
+package ru.yandex.practicum.telemetry.collector.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,6 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig;
 
 @Component
 @Getter

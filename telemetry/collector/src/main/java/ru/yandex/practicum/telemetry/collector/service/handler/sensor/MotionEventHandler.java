@@ -1,30 +1,34 @@
 package ru.yandex.practicum.telemetry.collector.service.handler.sensor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.*;
-import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
-import ru.yandex.practicum.telemetry.collector.model.sensor.MotionSensorEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.MotionSensorEvent;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
+import ru.yandex.practicum.telemetry.collector.configuration.KafkaEventProducer;
 
 @Component
 public class MotionEventHandler extends BaseSensorHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(MotionEventHandler.class);
 
     public MotionEventHandler(KafkaEventProducer kafkaEventProducer) {
         super(kafkaEventProducer);
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.MOTION_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.MOTION_SENSOR_EVENT;
     }
 
     @Override
-    MotionSensorAvro toAvro(SensorEvent sensorEvent) {
-        MotionSensorEvent motionEvent = (MotionSensorEvent) sensorEvent;
+    MotionSensorAvro toAvro(SensorEventProto sensorEvent) {
+        log.info("Converting to Avro Motion sensor event: {}", sensorEvent);
+        MotionSensorEvent motionEvent = sensorEvent.getMotionSensorEvent();
 
         return MotionSensorAvro.newBuilder()
-                .setMotion(motionEvent.isMotion())
+                .setMotion(motionEvent.getMotion())
                 .setLinkQuality(motionEvent.getLinkQuality())
                 .setVoltage(motionEvent.getVoltage())
                 .build();
