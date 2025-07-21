@@ -7,7 +7,7 @@ spring:
 collector:
   kafka:
     producer-properties:
-      "bootstrap.servers": localhost:9092
+      "bootstrap.servers": localhost:29092
       "client.id": telemetry.collector
       "key.serializer": org.apache.kafka.common.serialization.StringSerializer
       "value.serializer": kafka.serializer.GeneralAvroSerializer
@@ -17,9 +17,9 @@ collector:
 grpc:
   client:
     collector:
-      address: 'static://127.0.0.1:9090'
+      address: 'static://127.0.0.1:59091'
       enable-keep-alive: true
       keep-alive-without-calls: true
       negotiation-type: plaintext
   server:
-    port: 9090
+    port: 59091
