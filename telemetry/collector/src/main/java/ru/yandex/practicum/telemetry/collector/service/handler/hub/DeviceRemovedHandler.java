@@ -25,7 +25,7 @@ public class DeviceRemovedHandler extends BaseHubEventHandlerProto {
         DeviceRemovedEventProto deviceRemovedEvent = hubEvent.getDeviceRemoved();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(mapTimestampToInstant(hubEvent).toEpochMilli()))
+                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
                 .setPayload(new DeviceRemovedEventAvro(deviceRemovedEvent.getId()))
                 .build();
     }

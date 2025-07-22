@@ -26,7 +26,7 @@ public class SwitchEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(mapTimestampToInstant(sensorEvent).toEpochMilli()))
+                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
                 .setPayload(SwitchSensorAvro.newBuilder()
                         .setState(switchSensor.getState())
                         .build())

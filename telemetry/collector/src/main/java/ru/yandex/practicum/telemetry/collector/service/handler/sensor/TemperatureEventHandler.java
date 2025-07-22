@@ -26,7 +26,7 @@ public class TemperatureEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(mapTimestampToInstant(sensorEvent).toEpochMilli()))
+                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
                 .setPayload(TemperatureSensorAvro.newBuilder()
                         .setTemperatureC(temperatureSensor.getTemperatureC())
                         .setTemperatureF(temperatureSensor.getTemperatureF())

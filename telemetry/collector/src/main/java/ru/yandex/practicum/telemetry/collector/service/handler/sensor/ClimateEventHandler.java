@@ -26,7 +26,7 @@ public class ClimateEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(mapTimestampToInstant(sensorEvent).toEpochMilli()))
+                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
                 .setPayload(ClimateSensorAvro.newBuilder()
                         .setTemperatureC(climateSensor.getTemperatureC())
                         .setHumidity(climateSensor.getHumidity())

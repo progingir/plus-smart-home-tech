@@ -24,7 +24,7 @@ public class ScenarioAddedHandler extends BaseHubEventHandlerProto {
         ScenarioAddedEventProto scenarioAddedEvent = hubEvent.getScenarioAdded();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(mapTimestampToInstant(hubEvent).toEpochMilli()))
+                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
                 .setPayload(new ScenarioAddedEventAvro(scenarioAddedEvent.getName(),
                         mapToConditionTypeAvro(scenarioAddedEvent.getConditionList()),
                         mapToDeviceActionAvro(scenarioAddedEvent.getActionList())))
