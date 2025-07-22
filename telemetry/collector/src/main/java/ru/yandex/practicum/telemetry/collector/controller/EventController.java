@@ -1,19 +1,16 @@
 package ru.yandex.practicum.telemetry.collector.controller;
 
-import jakarta.validation.Valid;
+import com.google.protobuf.Empty;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
-import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEventType;
-import ru.yandex.practicum.telemetry.collector.service.handler.hub.HubEventHandler;
-import ru.yandex.practicum.telemetry.collector.service.handler.sensor.SensorEventHandler;
+import net.devh.boot.grpc.server.service.GrpcService;
+import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.telemetry.collector.service.handler.hub.HubEventHandlerProto;
+import ru.yandex.practicum.telemetry.collector.service.handler.sensor.SensorEventHandlerProto;
 
 import java.util.Map;
 import java.util.Set;
@@ -21,36 +18,54 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RestController
-@Validated
-@RequestMapping(path = "/events", consumes = MediaType.APPLICATION_JSON_VALUE)
-public class EventController {
+@GrpcService
+public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
 
-    private final Map<HubEventType, HubEventHandler> hubEventHandlerMap;
-    private final Map<SensorEventType, SensorEventHandler> sensorEventHandlerMap;
+    private final Map<SensorEventProto.PayloadCase, SensorEventHandlerProto> sensorEventHandlers;
+    private final Map<HubEventProto.PayloadCase, HubEventHandlerProto> hubEventHandlers;
 
-    public EventController(Set<HubEventHandler> hubEventHandlers, Set<SensorEventHandler> sensorEventHandlers) {
-        this.hubEventHandlerMap = hubEventHandlers.stream()
-                .collect(Collectors.toMap(HubEventHandler::getMessageType, Function.identity()));
-        this.sensorEventHandlerMap = sensorEventHandlers.stream()
-                .collect(Collectors.toMap(SensorEventHandler::getMessageType, Function.identity()));
+    public EventController(Set<SensorEventHandlerProto> sensorEventHandlers, Set<HubEventHandlerProto> hubEventHandlers) {
+        this.sensorEventHandlers = sensorEventHandlers.stream()
+                .collect(Collectors.toMap(SensorEventHandlerProto::getMessageType, Function.identity()));
+        this.hubEventHandlers = hubEventHandlers.stream()
+                .collect(Collectors.toMap(HubEventHandlerProto::getMessageType, Function.identity()));
     }
 
-    @PostMapping("/sensors")
-    public void addSensorEvent(@Valid @RequestBody SensorEvent sensorEvent) {
-        var handler = sensorEventHandlerMap.get(sensorEvent.getType());
-        if (handler == null) {
-            throw new IllegalArgumentException("No handler for sensor event type: " + sensorEvent.getType());
+    @Override
+    public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
+        SensorEventProto.PayloadCase sensorEventType = request.getPayloadCase();
+        log.info("Получили сообщение датчика {}", request);
+        try {
+            if (sensorEventHandlers.containsKey(sensorEventType)) {
+                log.info("Отправляем сообщение на обработку");
+                sensorEventHandlers.get(sensorEventType).handle(request);
+            } else {
+                throw new IllegalArgumentException("Не могу найти обработчик для события " + sensorEventType);
+            }
+
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(new StatusRuntimeException(Status.fromThrowable(e)));
         }
-        handler.handle(sensorEvent);
     }
 
-    @PostMapping("/hubs")
-    public void addHubEvent(@Valid @RequestBody HubEvent hubEvent) {
-        var handler = hubEventHandlerMap.get(hubEvent.getType());
-        if (handler == null) {
-            throw new IllegalArgumentException("No handler for hub event type: " + hubEvent.getType());
+    @Override
+    public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
+        HubEventProto.PayloadCase hubEventType = request.getPayloadCase();
+        log.info("Получили сообщение хаба типа: {}", hubEventType);
+        try {
+            if (hubEventHandlers.containsKey(hubEventType)) {
+                log.info("Отправляем сообщение на обработку");
+                hubEventHandlers.get(hubEventType).handle(request);
+            } else {
+                throw new IllegalArgumentException("Не могу найти обработчик для события " + hubEventType);
+            }
+
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(new StatusRuntimeException(Status.fromThrowable(e)));
         }
-        handler.handle(hubEvent);
     }
 }
