@@ -1,31 +1,34 @@
 package ru.yandex.practicum.telemetry.collector.service.handler.sensor;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.*;
+import ru.yandex.practicum.kafka.telemetry.event.LightSensorAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
-import ru.yandex.practicum.telemetry.collector.model.sensor.LightSensorEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
 @Component
-public class LightEventHandler extends BaseSensorHandler {
-
-    public LightEventHandler(KafkaEventProducer kafkaEventProducer) {
-        super(kafkaEventProducer);
+public class LightEventHandler extends BaseSensorHandlerProto {
+    public LightEventHandler(KafkaEventProducer producer) {
+        super(producer);
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.LIGHT_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.LIGHT_SENSOR;
     }
 
     @Override
-    LightSensorAvro toAvro(SensorEvent sensorEvent) {
-        LightSensorEvent lightEvent = (LightSensorEvent) sensorEvent;
-
-        return LightSensorAvro.newBuilder()
-                .setLinkQuality(lightEvent.getLinkQuality())
-                .setLuminosity(lightEvent.getLuminosity())
+    public SensorEventAvro toAvro(SensorEventProto sensorEvent) {
+        LightSensorProto lightSensor = sensorEvent.getLightSensor();
+        return SensorEventAvro.newBuilder()
+                .setId(sensorEvent.getId())
+                .setHubId(sensorEvent.getHubId())
+                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setPayload(LightSensorAvro.newBuilder()
+                        .setLinkQuality(lightSensor.getLinkQuality())
+                        .setLuminosity(lightSensor.getLuminosity())
+                        .build())
                 .build();
     }
 }
