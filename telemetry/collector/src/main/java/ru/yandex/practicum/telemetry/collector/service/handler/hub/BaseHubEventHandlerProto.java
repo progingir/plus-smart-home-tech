@@ -20,13 +20,9 @@ public abstract class BaseHubEventHandlerProto implements HubEventHandlerProto {
         producer.sendRecord(new org.apache.kafka.clients.producer.ProducerRecord<>(
                 topic(),
                 null,
-                mapTimestampToInstant(event).toEpochMilli(),
+                Instant.now().toEpochMilli(), // Используем текущую временную метку
                 event.getHubId(),
                 toAvro(event)));
-    }
-
-    public Instant mapTimestampToInstant(HubEventProto event) {
-        return Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos());
     }
 
     public abstract HubEventAvro toAvro(HubEventProto hubEvent);

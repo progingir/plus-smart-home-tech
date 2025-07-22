@@ -24,14 +24,10 @@ public abstract class BaseSensorHandlerProto implements SensorEventHandlerProto 
         producer.sendRecord(new org.apache.kafka.clients.producer.ProducerRecord<>(
                 topic(),
                 null,
-                mapTimestampToInstant(event).toEpochMilli(),
+                Instant.now().toEpochMilli(), // Используем текущую временную метку
                 event.getHubId(),
                 sensorEventAvro));
     }
 
     public abstract SensorEventAvro toAvro(SensorEventProto sensorEvent);
-
-    public Instant mapTimestampToInstant(SensorEventProto event) {
-        return Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos());
-    }
 }
