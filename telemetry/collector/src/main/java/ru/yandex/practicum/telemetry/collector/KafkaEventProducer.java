@@ -9,6 +9,8 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig;
 
+import java.util.Properties;
+
 @Component
 @Getter
 @Setter
@@ -19,7 +21,9 @@ public class KafkaEventProducer {
 
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
         this.config = kafkaConfig;
-        this.producer = new KafkaProducer<>(kafkaConfig.getProducerProperties());
+        Properties props = new Properties();
+        props.putAll(kafkaConfig.getProducerProperties());
+        this.producer = new KafkaProducer<>(props);
     }
 
     public void sendRecord(ProducerRecord<String, SpecificRecordBase> record) {
