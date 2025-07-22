@@ -9,8 +9,6 @@ import ru.yandex.practicum.grpc.telemetry.event.DeviceAddedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceTypeProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 
-import java.time.Instant;
-
 @Component
 public class DeviceAddedHandler extends BaseHubEventHandlerProto {
     public DeviceAddedHandler(KafkaEventProducer producer) {
@@ -27,7 +25,7 @@ public class DeviceAddedHandler extends BaseHubEventHandlerProto {
         DeviceAddedEventProto deviceAddedEvent = hubEvent.getDeviceAdded();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
                 .setPayload(new DeviceAddedEventAvro(deviceAddedEvent.getId(),
                         mapToDeviceTypeAvro(deviceAddedEvent.getType())))
                 .build();

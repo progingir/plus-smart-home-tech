@@ -7,8 +7,6 @@ import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
 
-import java.time.Instant;
-
 @Component
 public class ScenarioRemovedHandler extends BaseHubEventHandlerProto {
     public ScenarioRemovedHandler(KafkaEventProducer producer) {
@@ -25,7 +23,7 @@ public class ScenarioRemovedHandler extends BaseHubEventHandlerProto {
         ScenarioRemovedEventProto scenarioRemovedEvent = hubEvent.getScenarioRemoved();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
                 .setPayload(new ScenarioRemovedEventAvro(scenarioRemovedEvent.getName()))
                 .build();
     }

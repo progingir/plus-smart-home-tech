@@ -7,8 +7,6 @@ import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.TemperatureSensorProto;
 
-import java.time.Instant;
-
 @Component
 public class TemperatureEventHandler extends BaseSensorHandlerProto {
     public TemperatureEventHandler(KafkaEventProducer producer) {
@@ -26,7 +24,7 @@ public class TemperatureEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
+                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli()) // Используем timestamp из gRPC
                 .setPayload(TemperatureSensorAvro.newBuilder()
                         .setTemperatureC(temperatureSensor.getTemperatureC())
                         .setTemperatureF(temperatureSensor.getTemperatureF())

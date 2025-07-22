@@ -5,7 +5,6 @@ import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.grpc.telemetry.event.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @Component
@@ -24,7 +23,7 @@ public class ScenarioAddedHandler extends BaseHubEventHandlerProto {
         ScenarioAddedEventProto scenarioAddedEvent = hubEvent.getScenarioAdded();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
                 .setPayload(new ScenarioAddedEventAvro(scenarioAddedEvent.getName(),
                         mapToConditionTypeAvro(scenarioAddedEvent.getConditionList()),
                         mapToDeviceActionAvro(scenarioAddedEvent.getActionList())))

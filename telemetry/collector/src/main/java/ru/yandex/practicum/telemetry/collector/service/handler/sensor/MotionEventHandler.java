@@ -7,8 +7,6 @@ import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
 import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
-import java.time.Instant;
-
 @Component
 public class MotionEventHandler extends BaseSensorHandlerProto {
     public MotionEventHandler(KafkaEventProducer producer) {
@@ -26,7 +24,7 @@ public class MotionEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.now().toEpochMilli()) // Используем текущую временную метку
+                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli()) // Используем timestamp из gRPC
                 .setPayload(MotionSensorAvro.newBuilder()
                         .setMotion(motionSensor.getMotion())
                         .setLinkQuality(motionSensor.getLinkQuality())
