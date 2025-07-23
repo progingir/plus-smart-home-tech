@@ -19,6 +19,8 @@
         <module>telemetry</module>
         <module>infra</module>
         <module>commerce</module>
+        <module>telemetry/analyzer</module>
+        <module>telemetry/hub-router</module>
         <!-- Удалён <module>telemetry/aggregator</module> -->
     </modules>
 
