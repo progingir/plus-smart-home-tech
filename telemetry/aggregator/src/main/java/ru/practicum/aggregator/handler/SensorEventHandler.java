@@ -43,7 +43,7 @@ public class SensorEventHandler {
 
         return SensorsSnapshotAvro.newBuilder()
                 .setHubId(event.getHubId())
-                .setTimestamp(event.getTimestamp()) // Используем timestamp из события
+                .setTimestamp(event.getTimestamp())
                 .setSensorsState(sensorStates)
                 .build();
     }

@@ -23,7 +23,7 @@ public class ScenarioRemovedHandler extends BaseHubEventHandlerProto {
         ScenarioRemovedEventProto scenarioRemovedEvent = hubEvent.getScenarioRemoved();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli())
                 .setPayload(new ScenarioRemovedEventAvro(scenarioRemovedEvent.getName()))
                 .build();
     }

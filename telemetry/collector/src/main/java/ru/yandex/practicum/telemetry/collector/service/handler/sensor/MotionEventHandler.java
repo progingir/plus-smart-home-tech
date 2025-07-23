@@ -24,7 +24,7 @@ public class MotionEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli())
                 .setPayload(MotionSensorAvro.newBuilder()
                         .setMotion(motionSensor.getMotion())
                         .setLinkQuality(motionSensor.getLinkQuality())

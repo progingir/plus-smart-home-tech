@@ -24,7 +24,7 @@ public class LightEventHandler extends BaseSensorHandlerProto {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setTimestamp(mapTimestampToInstant(sensorEvent).toEpochMilli())
                 .setPayload(LightSensorAvro.newBuilder()
                         .setLinkQuality(lightSensor.getLinkQuality())
                         .setLuminosity(lightSensor.getLuminosity())

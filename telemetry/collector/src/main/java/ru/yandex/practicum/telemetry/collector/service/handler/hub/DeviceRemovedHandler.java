@@ -23,7 +23,7 @@ public class DeviceRemovedHandler extends BaseHubEventHandlerProto {
         DeviceRemovedEventProto deviceRemovedEvent = hubEvent.getDeviceRemoved();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli())
                 .setPayload(new DeviceRemovedEventAvro(deviceRemovedEvent.getId()))
                 .build();
     }

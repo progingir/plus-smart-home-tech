@@ -24,7 +24,7 @@ public abstract class BaseSensorHandlerProto implements SensorEventHandlerProto 
         producer.sendRecord(new org.apache.kafka.clients.producer.ProducerRecord<>(
                 topic(),
                 null,
-                mapTimestampToInstant(event).toEpochMilli(), // Используем timestamp из gRPC-сообщения
+                mapTimestampToInstant(event).toEpochMilli(),
                 event.getHubId(),
                 sensorEventAvro));
     }
@@ -35,7 +35,7 @@ public abstract class BaseSensorHandlerProto implements SensorEventHandlerProto 
             return Instant.now();
         }
         Instant timestamp = Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos());
-        // Проверка на разумность даты (не позже 2030 года)
+
         if (timestamp.isAfter(Instant.parse("2030-01-01T00:00:00Z"))) {
             log.warn("Timestamp too far in future: {}, using current time", timestamp);
             return Instant.now();
