@@ -1,10 +1,8 @@
 package ru.yandex.practicum.telemetry.collector.service.handler;
 
-
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.telemetry.collector.model.exception.ApiError;
 
@@ -12,10 +10,8 @@ import ru.yandex.practicum.telemetry.collector.model.exception.ApiError;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleException(final Exception e) {
+    public StatusRuntimeException handleException(final Exception e) {
         log.warn("Error", e);
-        return new ApiError("Error ", e.getMessage());
+        return new StatusRuntimeException(Status.INTERNAL.withDescription(new ApiError("Error", e.getMessage()).toString()));
     }
 }

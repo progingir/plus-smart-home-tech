@@ -3,93 +3,74 @@ package ru.yandex.practicum.telemetry.collector.service.handler.hub;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.KafkaEventProducer;
-import ru.yandex.practicum.telemetry.collector.model.hub.DeviceAction;
-import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
-import ru.yandex.practicum.telemetry.collector.model.hub.ScenarioAddedEvent;
-import ru.yandex.practicum.telemetry.collector.model.hub.ScenarioCondition;
-import ru.yandex.practicum.telemetry.collector.model.hub.enums.ActionType;
-import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionOperation;
-import ru.yandex.practicum.telemetry.collector.model.hub.enums.ConditionType;
-import ru.yandex.practicum.telemetry.collector.model.hub.enums.HubEventType;
+import ru.yandex.practicum.grpc.telemetry.event.*;
 
 import java.util.List;
 
 @Component
-public class ScenarioAddedHandler extends BaseHubHandler {
-
-    public ScenarioAddedHandler(KafkaEventProducer kafkaEventProducer) {
-        super(kafkaEventProducer);
+public class ScenarioAddedHandler extends BaseHubEventHandlerProto {
+    public ScenarioAddedHandler(KafkaEventProducer producer) {
+        super(producer);
     }
 
     @Override
-    public HubEventType getMessageType() {
-        return HubEventType.SCENARIO_ADDED;
+    public HubEventProto.PayloadCase getMessageType() {
+        return HubEventProto.PayloadCase.SCENARIO_ADDED;
     }
 
     @Override
-    ScenarioAddedEventAvro toAvro(HubEvent hubEvent) {
+    public HubEventAvro toAvro(HubEventProto hubEvent) {
+        ScenarioAddedEventProto scenarioAddedEvent = hubEvent.getScenarioAdded();
+        return HubEventAvro.newBuilder()
+                .setHubId(hubEvent.getHubId())
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli())
+                .setPayload(new ScenarioAddedEventAvro(scenarioAddedEvent.getName(),
+                        mapToConditionTypeAvro(scenarioAddedEvent.getConditionList()),
+                        mapToDeviceActionAvro(scenarioAddedEvent.getActionList())))
+                .build();
+    }
 
-       ScenarioAddedEvent addedScenarioEvent = (ScenarioAddedEvent) hubEvent;
-        List<DeviceActionAvro> actionAvroList = addedScenarioEvent.getActions().stream()
-                .map(this::toDeviceActionAvro)
+    private List<ScenarioConditionAvro> mapToConditionTypeAvro(List<ScenarioConditionProto> conditionList) {
+        return conditionList.stream()
+                .map(c -> ScenarioConditionAvro.newBuilder()
+                        .setSensorId(c.getSensorId())
+                        .setType(switch (c.getType()) {
+                            case MOTION -> ConditionTypeAvro.MOTION;
+                            case LUMINOSITY -> ConditionTypeAvro.LUMINOSITY;
+                            case SWITCH -> ConditionTypeAvro.SWITCH;
+                            case TEMPERATURE -> ConditionTypeAvro.TEMPERATURE;
+                            case CO2LEVEL -> ConditionTypeAvro.CO2LEVEL;
+                            case HUMIDITY -> ConditionTypeAvro.HUMIDITY;
+                            case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized condition type: " + c.getType());
+                        })
+                        .setOperation(switch (c.getOperation()) {
+                            case EQUALS -> ConditionOperationAvro.EQUALS;
+                            case GREATER_THAN -> ConditionOperationAvro.GREATER_THAN;
+                            case LOWER_THAN -> ConditionOperationAvro.LOWER_THAN;
+                            case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized operation: " + c.getOperation());
+                        })
+                        .setValue(switch (c.getValueCase()) {
+                            case INT_VALUE -> c.getIntValue();
+                            case BOOL_VALUE -> c.getBoolValue();
+                            case VALUE_NOT_SET -> null;
+                        })
+                        .build())
                 .toList();
-        List<ScenarioConditionAvro> scenarioConditionAvroList = addedScenarioEvent.getConditions().stream()
-                .map(this::toScenarioConditionAvro)
+    }
+
+    private List<DeviceActionAvro> mapToDeviceActionAvro(List<DeviceActionProto> actionList) {
+        return actionList.stream()
+                .map(da -> DeviceActionAvro.newBuilder()
+                        .setSensorId(da.getSensorId())
+                        .setType(switch (da.getType()) {
+                            case ACTIVATE -> ActionTypeAvro.ACTIVATE;
+                            case DEACTIVATE -> ActionTypeAvro.DEACTIVATE;
+                            case INVERSE -> ActionTypeAvro.INVERSE;
+                            case SET_VALUE -> ActionTypeAvro.SET_VALUE;
+                            case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized action type: " + da.getType());
+                        })
+                        .setValue(da.getValue())
+                        .build())
                 .toList();
-
-        return ScenarioAddedEventAvro.newBuilder()
-                .setName(addedScenarioEvent.getName())
-                .setAction(actionAvroList)
-                .setConditions(scenarioConditionAvroList)
-                .build();
     }
-
-    private DeviceActionAvro toDeviceActionAvro(DeviceAction deviceAction) {
-
-        return DeviceActionAvro.newBuilder()
-                .setSensorId(deviceAction.getSensorId())
-                .setType(toActionTypeAvro(deviceAction.getType()))
-                .setValue(deviceAction.getValue())
-                .build();
-    }
-
-    private ActionTypeAvro toActionTypeAvro(ActionType actionType) {
-        return switch (actionType) {
-            case ActionType.ACTIVATE -> ActionTypeAvro.ACTIVATE;
-            case ActionType.DEACTIVATE -> ActionTypeAvro.DEACTIVATE;
-            case ActionType.INVERSE -> ActionTypeAvro.INVERSE;
-            case ActionType.SET_VALUE-> ActionTypeAvro.SET_VALUE;
-        };
-    }
-
-    private ScenarioConditionAvro toScenarioConditionAvro(ScenarioCondition scenarioCondition) {
-
-        return ScenarioConditionAvro.newBuilder()
-                .setSensorId(scenarioCondition.getSensorId())
-                .setType(toConditionTypeAvro(scenarioCondition.getType()))
-                .setValue(scenarioCondition.getValue())
-                .setOperation(toConditionOperationAvro(scenarioCondition.getOperation()))
-                .build();
-    }
-
-    private ConditionTypeAvro toConditionTypeAvro(ConditionType conditionType) {
-        return switch (conditionType) {
-            case ConditionType.MOTION -> ConditionTypeAvro.MOTION;
-            case ConditionType.LUMINOSITY-> ConditionTypeAvro.LUMINOSITY;
-            case ConditionType.SWITCH -> ConditionTypeAvro.SWITCH;
-            case ConditionType.TEMPERATURE -> ConditionTypeAvro.TEMPERATURE;
-            case ConditionType.CO2LEVEL -> ConditionTypeAvro.CO2LEVEL;
-            case ConditionType.HUMIDITY -> ConditionTypeAvro.HUMIDITY;
-        };
-    }
-
-    private ConditionOperationAvro toConditionOperationAvro(ConditionOperation conditionOperation) {
-        return switch (conditionOperation) {
-            case ConditionOperation.EQUALS -> ConditionOperationAvro.EQUALS;
-            case ConditionOperation.GREATER_THAN -> ConditionOperationAvro.GREATER_THAN;
-            case ConditionOperation.LOWER_THAN -> ConditionOperationAvro.LOWER_THAN;
-        };
-    }
-
-
 }
