@@ -25,7 +25,7 @@ public class DeviceAddedHandler extends BaseHubEventHandlerProto {
         DeviceAddedEventProto deviceAddedEvent = hubEvent.getDeviceAdded();
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli()) // Используем timestamp из gRPC
+                .setTimestamp(mapTimestampToInstant(hubEvent).toEpochMilli())
                 .setPayload(new DeviceAddedEventAvro(deviceAddedEvent.getId(),
                         mapToDeviceTypeAvro(deviceAddedEvent.getType())))
                 .build();
