@@ -24,6 +24,8 @@ public class HubEventProcessor implements Runnable {
     private final HubEventHandlers handlers;
     @Value("${topic.hub-event-topic}")
     private String topic;
+    @Value("${spring.kafka.consumer.hub-processor-poll-timeout}")
+    private int pollTimeout;
 
     @Override
     public void run() {
@@ -35,7 +37,7 @@ public class HubEventProcessor implements Runnable {
 
             while (true) {
 
-                ConsumerRecords<String, HubEventAvro> records = consumer.poll(Duration.ofMillis(1000));
+                ConsumerRecords<String, HubEventAvro> records = consumer.poll(Duration.ofMillis(pollTimeout));
 
                 for (ConsumerRecord<String, HubEventAvro> record : records) {
                     HubEventAvro event = record.value();
