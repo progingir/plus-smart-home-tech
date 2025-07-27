@@ -3,6 +3,7 @@ package ru.practicum.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,23 +35,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductsListResponse getProductsByCategory(ProductCategory category, Pageable pageable) {
-        List<Sort.Order> orders = pageable.getSort().isEmpty()
-                ? Collections.emptyList()
-                : pageable.getSort().stream()
-                .map(s -> new Sort.Order(Sort.Direction.ASC, s))
-                .toList();
+    public ProductsListResponse getProductsByCategory(ProductCategory category, ru.practicum.dto.store.Pageable pageable) {
+        return null;
+    }
 
-        PageRequest pageRequest = orders.isEmpty()
-                ? PageRequest.of(pageable.getPage(), pageable.getSize())
-                : PageRequest.of(pageable.getPage(), pageable.getSize(), Sort.by(orders));
+    public ProductsListResponse getProductsByCategory(ProductCategory category, Pageable pageable) {
+        // Получаем сортировку из pageable
+        Sort sort = pageable.getSort();
+        // Создаём PageRequest с учётом сортировки
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        // Получаем список заказов сортировки для ответа
+        List<Sort.Order> orders = sort.isUnsorted()
+                ? Collections.emptyList()
+                : sort.get().map(order -> new Sort.Order(order.getDirection(), order.getProperty())).toList();
 
         return ProductsListResponse.builder()
                 .content(productRepository
-                        .findAllByProductCategoryAndProductState(
-                                category,
-                                ProductState.ACTIVE,
-                                pageRequest)
+                        .findAllByProductCategory(category, pageRequest)
                         .stream()
                         .map(ProductMapper::mapToDto)
                         .toList())
