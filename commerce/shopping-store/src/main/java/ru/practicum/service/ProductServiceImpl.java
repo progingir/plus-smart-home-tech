@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         List<Sort.Order> orders = pageable.getSort().isEmpty()
                 ? Collections.emptyList()
                 : pageable.getSort().stream()
-                .map(s -> new Sort.Order(pageable.getDirection().equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, s))
+                .map(s -> new Sort.Order(Sort.Direction.ASC, s)) // Жестко задаем ASC
                 .toList();
 
         PageRequest pageRequest = orders.isEmpty()
@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
                         .toList())
                 .sort(orders.stream()
                         .map(o -> SortProperties.builder()
-                                .direction(o.getDirection().toString())
+                                .direction(o.getDirection().toString()) // Будет "ASC"
                                 .property(o.getProperty())
                                 .build())
                         .toList())
