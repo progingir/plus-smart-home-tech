@@ -1,0 +1,14 @@
+topic:
+  telemetry-sensors: telemetry.sensors.v1
+  telemetry-hubs: telemetry.hubs.v1
+
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: ru.practicum.serializer.CollectorAvroSerializer
+
+grpc:
+  server:
+    port: 59091
