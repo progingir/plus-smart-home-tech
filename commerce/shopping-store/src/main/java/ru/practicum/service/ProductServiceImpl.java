@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         List<Sort.Order> orders = pageable.getSort().isEmpty()
                 ? Collections.emptyList()
                 : pageable.getSort().stream()
-                .map(s -> new Sort.Order(Sort.Direction.ASC, s))
+                .map(s -> new Sort.Order(pageable.getDirection().equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, s))
                 .toList();
 
         PageRequest pageRequest = orders.isEmpty()
@@ -47,10 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
         return ProductsListResponse.builder()
                 .content(productRepository
-                        .findAllByProductCategoryAndProductState(
-                                category,
-                                ProductState.ACTIVE,
-                                pageRequest)
+                        .findAllByProductCategory(category, pageRequest)
                         .stream()
                         .map(ProductMapper::mapToDto)
                         .toList())

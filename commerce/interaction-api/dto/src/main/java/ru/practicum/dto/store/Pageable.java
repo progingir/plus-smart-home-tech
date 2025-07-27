@@ -17,4 +17,5 @@ public class Pageable {
     @Min(value = 1)
     private Integer size = 1;
     private List<String> sort = Collections.emptyList();
+    private String direction;
 }
