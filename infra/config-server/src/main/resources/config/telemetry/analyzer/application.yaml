@@ -1,0 +1,44 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      hub-client-id: HubEventConsumer
+      hub-group-id: hubEvent.group.id
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      hub-event-deserializer: ru.practicum.deserializer.HubEventDeserializer
+      enable-auto-commit: false
+      snapshots-client-id: SnapshotsConsumer
+      snapshot-group-id: snapshot.group.id
+      snapshot-deserializer: ru.practicum.deserializer.SnapshotDeserializer
+      hub-processor-poll-timeout: 1000
+      snapshot-processor-poll-timeout: 1000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show_sql: false
+
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/smart-home
+    username: postgres
+    password: password
+
+grpc:
+  client:
+    hub-router:
+      address: static://localhost:59090
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+topic:
+  snapshots-topic: telemetry.snapshots.v1
+  hub-event-topic: telemetry.hubs.v1
