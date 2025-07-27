@@ -1,4 +1,46 @@
 services:
+  smart-home-db:
+    image: postgres:16.1
+    container_name: postgres-smart-home-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=progingir
+      - POSTGRES_USER=12345
+      - POSTGRES_DB=smart-home
+
+  commerce-db:
+    image: postgres:16.1
+    container_name: commerce-db
+    ports:
+      - "6432:5432"
+    environment:
+      - POSTGRES_PASSWORD=progingir
+      - POSTGRES_USER=12345
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+  db-init:
+    image: postgres:16.1
+    container_name: db-init
+    depends_on:
+      commerce-db:
+        condition: service_healthy
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        psql postgresql://postgres:password@commerce-db:5432 -v ON_ERROR_STOP=1 <<-EOSQL
+        create database commerce_shopping_cart;
+        create database commerce_shopping_store;
+        create database commerce_warehouse;
+        EOSQL
+
   kafka:
     image: confluentinc/confluent-local:7.4.3
     hostname: kafka
