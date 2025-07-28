@@ -69,7 +69,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         } catch (FeignException e) {
             if (e.status() == 404) {
                 log.error("Товар ещё не добавили на витрину магазина");
-                throw new ProductNotFoundInWarehouseException("Товар не найден в магазине");
             } else {
                 log.error("Ошибка при обновлении количества товара в магазине", e);
             }
