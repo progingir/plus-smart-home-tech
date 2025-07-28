@@ -67,10 +67,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         try {
             updateProductQuantityInShoppingStore(product);
         } catch (FeignException e) {
-            // Оставлено логирование вместо выброса исключений, чтобы сохранить совместимость с тестами,
-            // ожидающими HTTP 200/201/204 и валидный JSON-ответ
             if (e.status() == 404) {
-                log.info("Товар ещё не добавили на витрину магазина");
+                log.error("Товар ещё не добавили на витрину магазина");
             } else {
                 log.error("Ошибка при обновлении количества товара в магазине", e);
             }
