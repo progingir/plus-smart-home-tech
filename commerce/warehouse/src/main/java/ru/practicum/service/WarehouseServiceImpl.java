@@ -14,6 +14,7 @@ import ru.practicum.enums.QuantityState;
 import ru.practicum.feign_client.StoreClient;
 import ru.practicum.feign_client.exception.ProductInShoppingCartLowQuantityInWarehouseException;
 import ru.practicum.feign_client.exception.ProductNotFoundInWarehouseException;
+import ru.practicum.feign_client.exception.WarehouseServerUnavailable;
 import ru.practicum.address.AddressManager;
 import ru.practicum.exceptions.SpecifiedProductAlreadyInWarehouseException;
 import ru.practicum.mapper.WarehouseProductMapper;
@@ -69,8 +70,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         } catch (FeignException e) {
             if (e.status() == 404) {
                 log.info("Товар ещё не добавили на витрину магазина");
+                throw new ProductNotFoundInWarehouseException("Товар не найден в магазине");
             } else {
                 log.error("Ошибка при обновлении количества товара в магазине", e);
+                throw new WarehouseServerUnavailable("Сервис магазина недоступен");
             }
         }
     }
