@@ -1,8 +1,9 @@
 package ru.practicum.dto.store;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import ru.practicum.enums.QuantityState;
+import lombok.Builder;
+import lombok.Getter;
+import ru.practicum.enums.store.QuantityState;
 
 import java.util.UUID;
 

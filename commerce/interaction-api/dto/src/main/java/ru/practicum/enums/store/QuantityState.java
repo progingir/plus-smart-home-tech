@@ -1,4 +1,4 @@
-package ru.practicum.enums;
+package ru.practicum.enums.store;
 
 public enum QuantityState {
     ENDED,

@@ -5,8 +5,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=progingir
-      - POSTGRES_USER=12345
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=progingir
       - POSTGRES_DB=smart-home
 
   commerce-db:
@@ -15,8 +15,8 @@ services:
     ports:
       - "6432:5432"
     environment:
-      - POSTGRES_PASSWORD=progingir
-      - POSTGRES_USER=12345
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
@@ -39,6 +39,9 @@ services:
         create database commerce_shopping_cart;
         create database commerce_shopping_store;
         create database commerce_warehouse;
+        create database commerce_order;
+        create database commerce_payment;
+        create database commerce_delivery;
         EOSQL
 
   kafka:

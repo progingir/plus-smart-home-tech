@@ -5,7 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.exception.ProductNotFoundException;
+import ru.practicum.feign_client.exception.shopping_store.ProductNotFoundException;
 import ru.practicum.exception.ValidationException;
 
 @RestControllerAdvice

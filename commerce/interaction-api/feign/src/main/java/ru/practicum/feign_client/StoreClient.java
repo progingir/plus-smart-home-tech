@@ -4,7 +4,7 @@ import feign.FeignException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.store.ProductDto;
-import ru.practicum.enums.QuantityState;
+import ru.practicum.enums.store.QuantityState;
 
 import java.util.UUID;
 
