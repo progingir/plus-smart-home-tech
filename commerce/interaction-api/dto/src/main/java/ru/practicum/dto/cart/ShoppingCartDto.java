@@ -1,6 +1,8 @@
 package ru.practicum.dto.cart;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +15,6 @@ public class ShoppingCartDto {
     @NotNull
     private UUID shoppingCartId;
     @NotNull
-    private Map<UUID, Long> products;
+    @NotEmpty
+    private Map<@NotNull UUID, @NotNull @Positive Long> products;
 }

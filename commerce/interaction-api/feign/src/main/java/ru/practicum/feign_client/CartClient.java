@@ -15,19 +15,19 @@ import java.util.UUID;
 public interface CartClient {
     @PutMapping
     ShoppingCartDto addProductsInCart(@RequestParam String username,
-                                      @RequestBody Map<UUID, Long> additionalProperties) throws FeignException;
+                                      @RequestBody Map<UUID, Long> additionalProperties);
 
     @GetMapping
-    ShoppingCartDto getActiveShoppingCartOfUser(@RequestParam String username) throws FeignException;
+    ShoppingCartDto getActiveShoppingCartOfUser(@RequestParam String username);
 
     @DeleteMapping
-    void deactivateCart(@RequestParam String username) throws FeignException;
+    void deactivateCart(@RequestParam String username);
 
     @PostMapping("/remove")
     ShoppingCartDto removeOtherProductsFromCart(@RequestParam String username,
-                                                @RequestBody List<UUID> productIds) throws FeignException;
+                                                @RequestBody List<UUID> productIds);
 
     @PostMapping("/change-quantity")
     ProductDto changeProductQuantity(@RequestParam String username,
-                                     @RequestBody ChangeProductQuantityRequest request) throws FeignException;
+                                     @RequestBody ChangeProductQuantityRequest request);
 }

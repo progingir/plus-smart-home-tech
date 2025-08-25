@@ -23,6 +23,9 @@
         <module>commerce/interaction-api</module>
         <module>commerce/shopping-cart</module>
         <module>commerce/warehouse</module>
+        <module>commerce/order</module>
+        <module>commerce/payment</module>
+        <module>commerce/delivery</module>
     </modules>
 
     <properties>
@@ -36,6 +39,7 @@
         <grpc.version>1.63.0</grpc.version>
         <spring-cloud-dependencies.version>2023.0.3</spring-cloud-dependencies.version>
 
+        <!--       Plugins       -->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <avro-maven-plugin.version>${avro.version}</avro-maven-plugin.version>
         <protobuf-plugin.version>2.4.0</protobuf-plugin.version>
@@ -69,6 +73,7 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--    GRPC dependencies management        -->
             <dependency>
                 <groupId>net.devh</groupId>
                 <artifactId>grpc-spring-boot-starter</artifactId>
@@ -114,10 +119,6 @@
                     <groupId>io.github.ascopes</groupId>
                     <artifactId>protobuf-maven-plugin</artifactId>
                     <version>${protobuf-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
             </plugins>
         </pluginManagement>

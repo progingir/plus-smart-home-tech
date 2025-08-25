@@ -2,8 +2,8 @@ package ru.practicum.repository;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.enums.ProductCategory;
-import ru.practicum.enums.ProductState;
+import ru.practicum.enums.store.ProductCategory;
+import ru.practicum.enums.store.ProductState;
 import ru.practicum.model.Product;
 
 import java.util.List;

@@ -2,12 +2,12 @@ package ru.practicum.feign_client.fallback;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.cart.ShoppingCartDto;
-import ru.practicum.dto.warehouse.AddProductToWarehouseRequest;
-import ru.practicum.dto.warehouse.AddressDto;
-import ru.practicum.dto.warehouse.BookedProductsDto;
-import ru.practicum.dto.warehouse.NewProductInWarehouseRequest;
+import ru.practicum.dto.warehouse.*;
 import ru.practicum.feign_client.WarehouseClient;
-import ru.practicum.feign_client.exception.WarehouseServerUnavailable;
+import ru.practicum.feign_client.exception.warehouse.WarehouseServerUnavailable;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class WarehouseClientFallback implements WarehouseClient {
@@ -29,6 +29,21 @@ public class WarehouseClientFallback implements WarehouseClient {
 
     @Override
     public AddressDto getWarehouseAddress() {
+        throw new WarehouseServerUnavailable("Сервер warehouse временно недоступен");
+    }
+
+    @Override
+    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderRequest assemblyRequest) {
+        throw new WarehouseServerUnavailable("Сервер warehouse временно недоступен");
+    }
+
+    @Override
+    public void shipProductsToDelivery(ShippedToDeliveryRequest request) {
+        throw new WarehouseServerUnavailable("Сервер warehouse временно недоступен");
+    }
+
+    @Override
+    public void returnProducts(Map<UUID, Long> products) {
         throw new WarehouseServerUnavailable("Сервер warehouse временно недоступен");
     }
 }

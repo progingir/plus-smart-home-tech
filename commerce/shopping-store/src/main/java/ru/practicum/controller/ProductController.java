@@ -8,7 +8,7 @@ import ru.practicum.dto.store.Pageable;
 import ru.practicum.dto.store.ProductDto;
 import ru.practicum.dto.store.ProductsListResponse;
 import ru.practicum.dto.store.SetProductQuantityStateRequest;
-import ru.practicum.enums.ProductCategory;
+import ru.practicum.enums.store.ProductCategory;
 import ru.practicum.service.ProductService;
 
 import java.util.UUID;
