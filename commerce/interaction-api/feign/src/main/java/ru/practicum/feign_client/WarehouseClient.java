@@ -16,24 +16,23 @@ import java.util.UUID;
 @FeignClient(name = "warehouse", path = "/api/v1/warehouse", fallback = WarehouseClientFallback.class)
 public interface WarehouseClient {
     @PutMapping
-    void addNewProduct(@RequestBody NewProductInWarehouseRequest newProductRequest) throws FeignException;
+    void addNewProduct(@RequestBody NewProductInWarehouseRequest newProductRequest);
 
     @PostMapping("/check")
-    BookedProductsDto checkProductsQuantity(@RequestBody ShoppingCartDto shoppingCartDto) throws FeignException;
+    BookedProductsDto checkProductsQuantity(@RequestBody ShoppingCartDto shoppingCartDto);
 
     @PostMapping("/add")
-    void addProductQuantity(@RequestBody AddProductToWarehouseRequest addProductQuantity) throws FeignException;
+    void addProductQuantity(@RequestBody AddProductToWarehouseRequest addProductQuantity);
 
     @GetMapping("/address")
-    AddressDto getWarehouseAddress() throws FeignException;
+    AddressDto getWarehouseAddress();
 
     @PostMapping("/assembly")
-    BookedProductsDto assemblyProductsForOrder(@RequestBody AssemblyProductsForOrderRequest assemblyRequest)
-            throws FeignException;
+    BookedProductsDto assemblyProductsForOrder(@RequestBody AssemblyProductsForOrderRequest assemblyRequest);
 
     @PostMapping("/shipped")
-    void shipProductsToDelivery(@RequestBody ShippedToDeliveryRequest request) throws FeignException;
+    void shipProductsToDelivery(@RequestBody ShippedToDeliveryRequest request);
 
     @PostMapping("/return")
-    void returnProducts(@RequestBody Map<UUID, Long> products) throws FeignException;
+    void returnProducts(@RequestBody Map<UUID, Long> products);
 }

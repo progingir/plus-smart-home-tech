@@ -13,17 +13,17 @@ import java.util.UUID;
 public interface PaymentClient {
 
     @PostMapping
-    PaymentDto makingPaymentForOrder(@RequestBody OrderDto orderDto) throws FeignException;
+    PaymentDto makingPaymentForOrder(@RequestBody OrderDto orderDto);
 
     @PostMapping("/productCost")
-    Double calculateProductsCost(@RequestBody OrderDto orderDto) throws FeignException;
+    Double calculateProductsCost(@RequestBody OrderDto orderDto);
 
     @PostMapping("/totalCost")
-    Double calculateTotalCost(@RequestBody OrderDto orderDto) throws FeignException;
+    Double calculateTotalCost(@RequestBody OrderDto orderDto);
 
     @PostMapping("/refund")
-    void changePaymentStateToSuccess(@RequestBody UUID paymentId) throws FeignException;
+    void changePaymentStateToSuccess(@RequestBody UUID paymentId);
 
     @PostMapping("/failed")
-    void changePaymentStateToFailed(@RequestBody UUID paymentId) throws FeignException;
+    void changePaymentStateToFailed(@RequestBody UUID paymentId);
 }

@@ -14,17 +14,17 @@ import java.util.UUID;
 public interface DeliveryClient {
 
     @PutMapping
-    DeliveryDto createNewDelivery(@RequestBody DeliveryDto deliveryDto) throws FeignException;
+    DeliveryDto createNewDelivery(@RequestBody DeliveryDto deliveryDto);
 
     @PostMapping("/cost")
-    Double calculateDeliveryCost(@RequestBody OrderDto orderDto) throws FeignException;
+    Double calculateDeliveryCost(@RequestBody OrderDto orderDto);
 
     @PostMapping("/picked")
-    void sendProductsToDelivery(@RequestBody UUID deliveryId) throws FeignException;
+    void sendProductsToDelivery(@RequestBody UUID deliveryId);
 
     @PostMapping("/successful")
-    void changeStateToDelivered(@RequestBody UUID deliveryId) throws FeignException;
+    void changeStateToDelivered(@RequestBody UUID deliveryId);
 
     @PostMapping("/failed")
-    void changeStateToFailed(@RequestBody UUID deliveryId) throws FeignException;
+    void changeStateToFailed(@RequestBody UUID deliveryId);
 }

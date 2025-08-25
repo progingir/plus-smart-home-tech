@@ -11,18 +11,18 @@ import java.util.UUID;
 @FeignClient(name = "shopping-store", path = "/api/v1/shopping-store")
 public interface StoreClient {
     @PutMapping
-    ProductDto addProduct(@RequestBody ProductDto productDto) throws FeignException;
+    ProductDto addProduct(@RequestBody ProductDto productDto);
 
     @PostMapping
-    ProductDto updateProduct(@RequestBody ProductDto productDto) throws FeignException;
+    ProductDto updateProduct(@RequestBody ProductDto productDto);
 
     @PostMapping("/removeProductFromStore")
-    Boolean deleteProduct(@RequestBody UUID productId) throws FeignException;
+    Boolean deleteProduct(@RequestBody UUID productId);
 
     @PostMapping("/quantityState")
     Boolean setQuantityState(@RequestParam UUID productId,
-                             @RequestParam QuantityState quantityState) throws FeignException;
+                             @RequestParam QuantityState quantityState);
 
     @GetMapping("/{productId}")
-    ProductDto getProductById(@PathVariable UUID productId) throws FeignException;
+    ProductDto getProductById(@PathVariable UUID productId);
 }
